@@ -75,6 +75,22 @@ function actualitzarModuls() {
     
     */
 
+    moduls[cicle][curs].forEach(modul => {
+        // Label per cada mòdul
+        const label = document.createElement('label');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.name = 'moduls';
+        checkbox.value = modul;
+        checkbox.checked = true; // Marcat per defecte
+    
+        // Checkbox i el text a cada label
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(` ${modul}`));
+    
+        // I afegim el label al div de mòduls
+        llistaModulsDiv.appendChild(label);
+    });
 }
 
 // Escoltem canvis en la selecció de cicle/curs
@@ -100,11 +116,49 @@ form.addEventListener('submit', async (e) => {
     Prepara un objece JSON amb la informació guardada al formulari
 
     */
+    const dadesFormulari = {
+        nom: formData.get('nom'),
+        cognoms: formData.get('cognoms'),
+        email: formData.get('email'),
+        adreca: formData.get('adreca'),
+        telefon: formData.get('telefon'),
+        cicle: formData.get('cicle'),
+        curs: formData.get('curs'),
+        moduls: formData.getAll('moduls')
+    };
+    console.log(dadesFormulari);
 
     // Preparem l'objecte amb les dades per enviar al servidor
     // I l'enviem, fent ús d'una petició POST
     // Recordeu convertir el JSON a un string per enviar-lo al servidor
     // Una vegada rebuda la resposta, creeu una URL amb ell, un enllaç
     // i forceu el clic en ell per descarregar el document.
+    try {
+        // console.log(tiquetData); // per a depuració
+        const response = await fetch('/enviar-matricula', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({dadesFormulari})
+        });
 
+        if (!response.ok) {
+            throw new Error('Error generant la matricula');
+        }
+
+        // Retorna el PDF com a blob
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        // Creem un enllaç i el descarreguem
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "matricula.pdf"; 
+        document.body.appendChild(a);
+        a.click();
+        a.remove();        
+    } catch (error) {
+        console.error('Error:',error);
+        alert('Hi ha hagut un error al processar la matrícula.');    }
 });

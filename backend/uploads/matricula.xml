@@ -1,0 +1,22 @@
+
+        <matricula>
+        <alumne>
+            <nom>a</nom>
+            <cognoms>a</cognoms>
+            <email>s@gmail.com</email>
+            <adreca>a</adreca>
+            <telefon>a</telefon>
+        </alumne>
+        <cicle>DAM</cicle>
+        <curs>1</curs>
+        <moduls>
+            <modul>Programació</modul>
+<modul>Bases de Dades</modul>
+<modul>Sistemes Informàtics</modul>
+<modul>Entorns de Desenvolupament</modul>
+<modul>Llenguatges de Marques i Sistemes de Gestió de la Informació</modul>
+<modul>Projecte Intermodular I</modul>
+<modul>Anglès Professional I</modul>
+<modul>Itinerari Personal per a l'Ocupabilitat I</modul>
+        </moduls>
+        </matricula>

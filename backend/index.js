@@ -56,16 +56,31 @@ app.post('/enviar-matricula', async (req, res) => {
 
 // Funció auxiliar per a generar l'XML
 function generarXML(dades) {
+    const moduls = Array.isArray(dades.dadesFormulari.moduls) ? dades.dadesFormulari.moduls : [dades.dadesFormulari.moduls];
+    
+    
     /*
     TO-DO:
 
     Amb les dades rebudes, generem un XML, amb el format corresponent (veieu exemple)
     */
+
+
     return `
-<matricula>
-  ...
-</matricula>
-    `;
+        <matricula>
+        <alumne>
+            <nom>${dades.dadesFormulari.nom}</nom>
+            <cognoms>${dades.dadesFormulari.cognoms}</cognoms>
+            <email>${dades.dadesFormulari.email}</email>
+            <adreca>${dades.dadesFormulari.adreca}</adreca>
+            <telefon>${dades.dadesFormulari.telefon}</telefon>
+        </alumne>
+        <cicle>${dades.dadesFormulari.cicle}</cicle>
+        <curs>${dades.dadesFormulari.curs}</curs>
+        <moduls>
+            ${moduls.map(modul => `<modul>${modul}</modul>`).join('\n')}
+        </moduls>
+        </matricula>`;
 }
 
 // Funció auxiliar per aplicar l'XSLT
@@ -80,7 +95,7 @@ function transformarXSLT(xmlPath, foPath) {
         La plantilla la guardareu en ./xslt/matricula.xsl
 
         */
-        const cmd = ``;
+        const cmd = `xsltproc -o "${foPath}" ./xslt/matricula.xsl "${xmlPath}"`; // Comando per aplicar la transformació XSLT
 
         exec(cmd, (error, stdout, stderr) => {
             if (error) {
@@ -102,7 +117,7 @@ function generarPDF(foPath, pdfPath) {
 
         */
         
-        const cmd = `fop "${foPath}" "${pdfPath}"`;
+        const cmd = `fop "${foPath}" "${pdfPath}"`; // Comando per generar el PDF
 
         exec(cmd, (error, stdout, stderr) => {
             if (error) {
